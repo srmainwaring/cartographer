@@ -41,9 +41,9 @@ class CeresPose {
       ceres::Problem* problem);
 #else
   CeresPose(
-      const transform::Rigid3d& rigid,
-      std::unique_ptr<ceres::LocalParameterization> translation_parametrization,
-      std::unique_ptr<ceres::LocalParameterization> rotation_parametrization,
+      const transform::Rigid3d& pose,
+      std::unique_ptr<ceres::Manifold> translation_manifold,
+      std::unique_ptr<ceres::Manifold> rotation_manifold,
       ceres::Problem* problem);
 #endif
 

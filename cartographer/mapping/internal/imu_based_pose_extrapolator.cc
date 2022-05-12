@@ -184,13 +184,12 @@ ImuBasedPoseExtrapolator::ExtrapolatePosesWithGravity(
 #else
     if (is_last) {
       nodes.emplace_back(gravity_from_node, nullptr,
-                         absl::make_unique<ceres::AutoDiffLocalParameterization<
-                             ConstantYawQuaternionPlus, 4, 2>>(),
+                         absl::make_unique<ConstantYawQuaternionManifold>(),
                          &problem);
       problem.SetParameterBlockConstant(nodes.back().translation());
     } else {
       nodes.emplace_back(gravity_from_node, nullptr,
-                         absl::make_unique<ceres::QuaternionParameterization>(),
+                         absl::make_unique<ceres::QuaternionManifold>(),
                          &problem);
     }
 #endif
@@ -228,7 +227,7 @@ ImuBasedPoseExtrapolator::ExtrapolatePosesWithGravity(
                      &problem);
 #else
   nodes.emplace_back(initial_estimate, nullptr,
-                     absl::make_unique<ceres::QuaternionParameterization>(),
+                     absl::make_unique<ceres::QuaternionManifold>(),
                      &problem);
 #endif
   node_times.push_back(time);

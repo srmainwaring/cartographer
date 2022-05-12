@@ -167,8 +167,8 @@ void AddLandmarkCostFunctions(
 #else
         C_landmarks->emplace(
             landmark_id,
-            CeresPose(starting_point, nullptr /* translation_parametrization */,
-                      absl::make_unique<ceres::QuaternionParameterization>(),
+            CeresPose(starting_point, nullptr /* translation_manifold */,
+                      absl::make_unique<ceres::QuaternionManifold>(),
                       problem));
 #endif
         // Set landmark constant if it is frozen.
@@ -323,9 +323,8 @@ void OptimizationProblem3D::Solve(
       C_submaps.Insert(
           submap_id_data.id,
           CeresPose(submap_id_data.data.global_pose,
-                    translation_parameterization(),
-                    absl::make_unique<ceres::AutoDiffLocalParameterization<
-                        ConstantYawQuaternionPlus, 4, 2>>(),
+                    translation_manifold(),
+                    absl::make_unique<ConstantYawQuaternionManifold>(),
                     &problem));
 #endif
       problem.SetParameterBlockConstant(
@@ -342,8 +341,8 @@ void OptimizationProblem3D::Solve(
       C_submaps.Insert(
           submap_id_data.id,
           CeresPose(submap_id_data.data.global_pose,
-                    translation_parameterization(),
-                    absl::make_unique<ceres::QuaternionParameterization>(),
+                    translation_manifold(),
+                    absl::make_unique<ceres::QuaternionManifold>(),
                     &problem));
 #endif
     }
@@ -366,8 +365,8 @@ void OptimizationProblem3D::Solve(
 #else
     C_nodes.Insert(
         node_id_data.id,
-        CeresPose(node_id_data.data.global_pose, translation_parameterization(),
-                  absl::make_unique<ceres::QuaternionParameterization>(),
+        CeresPose(node_id_data.data.global_pose, translation_manifold(),
+                  absl::make_unique<ceres::QuaternionManifold>(),
                   &problem));
 #endif
     if (frozen) {
@@ -604,9 +603,7 @@ void OptimizationProblem3D::Solve(
                     Eigen::AngleAxisd(
                         transform::GetYaw(fixed_frame_pose_in_map.rotation()),
                         Eigen::Vector3d::UnitZ())),
-                nullptr,
-                absl::make_unique<ceres::AutoDiffLocalParameterization<
-                    YawOnlyQuaternionPlus, 4, 1>>(),
+                nullptr, absl::make_unique<YawOnlyQuaternionManifold>(),
                 &problem));
 #endif
         fixed_frame_pose_initialized = true;
