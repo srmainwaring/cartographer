@@ -194,20 +194,36 @@ google_binary(cartographer_autogenerate_ground_truth
   SRCS
     cartographer/ground_truth/autogenerate_ground_truth_main.cc
 )
+target_link_directories(cartographer_autogenerate_ground_truth
+  PUBLIC
+  ${CAIRO_LIBRARY_DIRS}
+)
 
 google_binary(cartographer_compute_relations_metrics
   SRCS
     cartographer/ground_truth/compute_relations_metrics_main.cc
+)
+target_link_directories(cartographer_compute_relations_metrics
+  PUBLIC
+  ${CAIRO_LIBRARY_DIRS}
 )
 
 google_binary(cartographer_pbstream
   SRCS
   cartographer/io/pbstream_main.cc
 )
+target_link_directories(cartographer_pbstream
+  PUBLIC
+  ${CAIRO_LIBRARY_DIRS}
+)
 
 google_binary(cartographer_print_configuration
   SRCS
   cartographer/common/print_configuration_main.cc
+)
+target_link_directories(cartographer_print_configuration
+  PUBLIC
+  ${CAIRO_LIBRARY_DIRS}
 )
 
 if(${BUILD_GRPC})
@@ -238,7 +254,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM PUBLIC
   "${Boost_INCLUDE_DIRS}")
 target_link_libraries(${PROJECT_NAME} PUBLIC ${Boost_LIBRARIES})
 
-if (WIN32)
+if (WIN32 OR APPLE)
   find_package(glog REQUIRED)
   set(GLOG_LIBRARY glog::glog)
 else()
@@ -330,6 +346,12 @@ foreach(ABS_FIL ${ALL_TESTS})
     target_link_libraries("${TEST_TARGET_NAME}" PUBLIC prometheus-cpp-pull)
   endif()
   target_link_libraries("${TEST_TARGET_NAME}" PUBLIC ${TEST_LIB})
+
+  target_link_directories("${TEST_TARGET_NAME}"
+    PUBLIC
+    ${CAIRO_LIBRARY_DIRS}
+  )
+
 endforeach()
 
 # Add the binary directory first, so that port.h is included after it has

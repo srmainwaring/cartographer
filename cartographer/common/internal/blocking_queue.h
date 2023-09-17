@@ -26,6 +26,11 @@
 #include "cartographer/common/time.h"
 #include "glog/logging.h"
 
+//! @todo(srmainwaring) fix threading annotations on macOS / clang
+#define LOCKS_EXCLUDED(mutex)
+#define GUARDED_BY(mutex)
+#define EXCLUSIVE_LOCKS_REQUIRED(mutex)
+
 namespace cartographer {
 namespace common {
 

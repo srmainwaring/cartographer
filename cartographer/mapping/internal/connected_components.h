@@ -24,6 +24,11 @@
 #include "cartographer/mapping/proto/connected_components.pb.h"
 #include "cartographer/mapping/submaps.h"
 
+//! @todo(srmainwaring) fix threading annotations on macOS / clang
+#define LOCKS_EXCLUDED(mutex)
+#define GUARDED_BY(mutex)
+#define EXCLUSIVE_LOCKS_REQUIRED(mutex)
+
 namespace cartographer {
 namespace mapping {
 
